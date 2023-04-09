@@ -1,5 +1,6 @@
 import './index.html';
 import './index.scss';
+import {buyElephant} from './modules/Task.js';
 
 
 let count = 0;
@@ -19,3 +20,7 @@ document.querySelector('.button-importance').
 			}
 		}
 	});
+
+console.log(buyElephant);
+buyElephant.changeTaskTitle('open refrigirator');
+buyElephant.increasePomodoro();
