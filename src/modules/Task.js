@@ -27,5 +27,3 @@ export class Task {
 		return this.#id;
 	}
 }
-
-export const buyElephant = new Task('buy elephant');
