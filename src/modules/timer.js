@@ -5,7 +5,12 @@ export class TimerPomodoro {
 	#timeBigPause;
 	#tasks;
 	#activeTask;
+	static instance;
 	constructor(options = {}) {
+		if (TimerPomodoro.instance) {
+			return TimerPomodoro.instance;
+		}
+		TimerPomodoro.instance = this;
 		const {
 			timeTask = 25,
 			timePause = 5,
@@ -61,8 +66,8 @@ export class TimerPomodoro {
 		console.log(`Starting task "${this.#activeTask.title}"`);
 		setTimeout(() => {
 			this.#activeTask.increasePomodoro();
-			console.log(`Task "${this.#activeTask.title}" completed,
-			amount of pomodoros: ${this.#activeTask.pomodoro}`);
+			console.log(`Task "${this.#activeTask.title
+			}" completed, amount of pomodoros: ${this.#activeTask.pomodoro}`);
 			const isBigPause = (this.#activeTask.pomodoro + 1) % 3 === 0;
 			this.startPause(isBigPause);
 		}, this.#timeTask * 60000);

@@ -1,6 +1,6 @@
 import './index.html';
 import './index.scss';
-import {Task} from './modules/task.js';
+import {Task, TaskManager} from './modules/task.js';
 import {TimerPomodoro} from './modules/timer.js';
 
 
@@ -27,8 +27,7 @@ document.querySelector('.button-importance').
 // takeElephant.changeTaskTitle('open refrigirator');
 // takeElephant.increasePomodoro();
 
-const task1 = new Task('take elephant');
-const task2 = new Task('open refrigirator');
+
 
 const timerPomodoro = new TimerPomodoro({
 	timeTask: 0.5,
@@ -37,11 +36,28 @@ const timerPomodoro = new TimerPomodoro({
 	tasks: [task1, task2],
 });
 
-console.log(timerPomodoro.timeTask);
-console.log(timerPomodoro.timePause);
-console.log(timerPomodoro.timeBigPause);
-console.log(timerPomodoro.tasks);
-timerPomodoro.activateTask(task1.id);
-console.log(timerPomodoro.activeTask);
+// console.log(timerPomodoro.timeTask);
+// console.log(timerPomodoro.timePause);
+// console.log(timerPomodoro.timeBigPause);
+// console.log(timerPomodoro.tasks);
+// console.log(timerPomodoro.activeTask);
+// timerPomodoro.activateTask(task1.id);
 
-timerPomodoro.startTask();
+// timerPomodoro.startTask();
+
+const taskManager = new TaskManager();
+
+const task1 = new Task('take elephant', 0, 'low');
+const task2 = new Task('open refrigirator', 0, 'medium');
+const task3 = new Task('put elephant', 0, 'high');
+
+
+taskManager.addTask(task1);
+taskManager.addTask(task2);
+taskManager.addTask(task3);
+
+console.log(taskManager);
+
+const tasks = taskManager.getTasks();
+console.log(tasks);
+
