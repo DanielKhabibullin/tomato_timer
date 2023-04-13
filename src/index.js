@@ -1,5 +1,6 @@
 import './index.html';
 import './index.scss';
+import {renderTomato} from './modules/render.js';
 import {Task, TaskManager} from './modules/task.js';
 import {TimerPomodoro} from './modules/timer.js';
 
@@ -29,12 +30,12 @@ document.querySelector('.button-importance').
 
 
 
-const timerPomodoro = new TimerPomodoro({
-	timeTask: 0.5,
-	timePause: 0.25,
-	timeBigPause: 1,
-	tasks: [task1, task2],
-});
+// const timerPomodoro = new TimerPomodoro({
+// 	timeTask: 0.5,
+// 	timePause: 0.25,
+// 	timeBigPause: 1,
+// 	tasks: [task1, task2],
+// });
 
 // console.log(timerPomodoro.timeTask);
 // console.log(timerPomodoro.timePause);
@@ -61,3 +62,4 @@ console.log(taskManager);
 const tasks = taskManager.getTasks();
 console.log(tasks);
 
+renderTomato();

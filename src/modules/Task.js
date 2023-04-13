@@ -4,7 +4,7 @@ export class Task {
 	#title;
 	#pomodoro;
 	#importance;
-	constructor(title, pomodoro = 0, importance = 'medium') {
+	constructor(title, pomodoro = 0, importance = 'default') {
 		this.#id = Math.random().toString(16).substring(2, 8);
 		this.#title = title;
 		this.#pomodoro = pomodoro;
@@ -39,7 +39,7 @@ export class Task {
 
 export class ImportantTask extends Task {
 	#importance;
-	constructor(title, pomodoro = 0, importance = 'high') {
+	constructor(title, pomodoro = 0, importance = 'important') {
 		super(title, pomodoro);
 		this.#importance = importance;
 	}
@@ -50,7 +50,7 @@ export class ImportantTask extends Task {
 
 export class StandardTask extends Task {
 	#importance;
-	constructor(title, pomodoro = 0, importance = 'medium') {
+	constructor(title, pomodoro = 0, importance = 'default') {
 		super(title, pomodoro);
 		this.#importance = importance;
 	}
@@ -61,7 +61,7 @@ export class StandardTask extends Task {
 
 export class UnimportantTask extends Task {
 	#importance;
-	constructor(title, pomodoro = 0, importance = 'low') {
+	constructor(title, pomodoro = 0, importance = 'so-so') {
 		super(title, pomodoro);
 		this.#importance = importance;
 	}
