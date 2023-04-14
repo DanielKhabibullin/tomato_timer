@@ -45,8 +45,8 @@ export class ImportantTask extends Task {
 	}
 }
 
-export class StandardTask extends Task {
-	#importance = 'standard';
+export class StandartTask extends Task {
+	#importance = 'standart';
 
 	constructor(title, counter = 0) {
 		super(title, counter);

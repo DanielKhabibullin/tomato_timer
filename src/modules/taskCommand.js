@@ -1,6 +1,6 @@
 /* eslint-disable require-jsdoc */
 
-import {ImportantTask, StandardTask, UnimportantTask} from './Task.js';
+import {ImportantTask, StandartTask, UnimportantTask} from './Task.js';
 
 export class TaskCommand {
 	constructor(tomato, title, pomodoro = 0) {
@@ -20,9 +20,9 @@ export class CreateImportantTask extends TaskCommand {
 	}
 }
 
-export class CreateStandardTask extends TaskCommand {
+export class CreateStandartTask extends TaskCommand {
 	execute() {
-		this.tomato.addTask(new StandardTask(this.title, this.pomodoro));
+		this.tomato.addTask(new StandartTask(this.title, this.pomodoro));
 	}
 }
 

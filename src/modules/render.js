@@ -105,20 +105,26 @@ export class RenderTomato {
 	createTasks() {
 		const listTasks = [];
 
-		this.tomato.tasks.forEach(task => {
-			const taskClass = task.importance === 'major' ?
-				'important' : task.importance === 'standard' ?
-					'so-so' : 'default';
+		this.tomato.tasks.forEach((task, index) => {
+			let taskClass;
+			if (task.importance === 'major') {
+				taskClass = 'important';
+			} else {
+				taskClass = task.importance === 'standart' ? 'so-so' : 'default';
+			}
 
 			const listTask = el(`li.pomodoro-tasks__list-task.${taskClass}`);
 			listTask.dataset.id = task.id;
-			const countNumber = el('span.count-number', task.counter);
+			const countNumber = el('span.count-number', index + 1);
 			const buttonTaskText = el(
-				'button.pomodoro-tasks__task-text.pomodoro-tasks__task-text_active',
+				'button.pomodoro-tasks__task-text',
 				task.title,
 			);
 			const buttonTask = el('button.pomodoro-tasks__task-button');
 
+			if (task.id === this.tomato.activeTask?.id) {
+				buttonTaskText.classList.add('pomodoro-tasks__task-text_active');
+			}
 			setChildren(listTask, [countNumber, buttonTaskText, buttonTask]);
 			listTasks.push(listTask);
 		});
@@ -126,5 +132,3 @@ export class RenderTomato {
 		return listTasks;
 	}
 }
-
-// .pomodoro-tasks__task-text_active

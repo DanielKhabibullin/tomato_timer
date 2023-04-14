@@ -1,6 +1,6 @@
 /* eslint-disable require-jsdoc */
 
-import {CreateImportantTask, CreateStandardTask,
+import {CreateImportantTask, CreateStandartTask,
 	CreateUnimportantTask} from './taskCommand.js';
 
 
@@ -67,8 +67,14 @@ export class ControllerTomato {
 	}
 
 	createTask(title, importance) {
-		const Command = importance === 'important' ? CreateImportantTask :
-			importance === 'so-so' ? CreateStandardTask : CreateUnimportantTask;
+		let Command;
+
+		if (importance === 'important') {
+			Command = CreateImportantTask;
+		} else {
+			Command = importance === 'so-so' ? CreateStandartTask :
+			CreateUnimportantTask;
+		}
 
 		const command = new Command(this.tomato, title);
 		if (command.execute()) {
