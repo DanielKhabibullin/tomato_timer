@@ -1,107 +1,130 @@
+/* eslint-disable require-jsdoc */
 import {el, setChildren} from 'redom';
 
-export const renderTomato = () => {
-	const windowPanelTitle = el('p.window__panel-title', 'Сверстать сайт');
-	const windowPanelTaskText = el('p.window__panel-task-text', 'Томат 2');
-	const windowPanel = el('div.window__panel', [
-		windowPanelTitle,
-		windowPanelTaskText,
-	]);
+export class RenderTomato {
+	constructor(main, tomato) {
+		this.main = main;
+		this.tomato = tomato;
+		this.init();
+	}
 
-	const windowTimerText = el('p.window__timer-text', '25:00');
-	const buttonPrimary = el('button.button.button-primary', 'Старт');
-	const buttonSecondary = el('button.button.button-secondary', 'Стоп');
+	init() {
+		const container = el('div.container.main__container');
+		setChildren(this.main, container);
 
-	const windowBody = el('div.window__body', [
-		windowTimerText,
-		el('div.window__buttons', [
-			buttonPrimary,
-			buttonSecondary,
-		]),
-	]);
+		const pomodoroTasks = el('div.pomodoro-tasks');
+		const pomodoroFormWindow = el('div.pomodoro-form.window');
+		setChildren(container, [pomodoroFormWindow, pomodoroTasks]);
 
-	const inputTask = el('input.task-name.input-primary',
-		{type: 'text', name: 'task-name', id: 'task-name',
-			placeholder: 'название задачи'});
-	const buttonImportance = el('button.button.button-importance.default',
-		{type: 'button', 'aria-label': 'Указать важность'});
-	const buttonAddTask = el('button.button.button-primary.task-form__add-button',
-		{type: 'submit'}, 'Добавить');
+		this.questTasks = el('ul.pomodoro-tasks__quest-tasks');
+		const headerTitle = el('p.pomodoro-tasks__header-title', 'Инструкция:');
+		setChildren(pomodoroTasks,
+			[headerTitle, this.createQuestList(), this.questTasks]);
 
-	const taskForm = el('form.task-form', {action: 'submit'}, [
-		inputTask,
-		buttonImportance,
-		buttonAddTask,
-	]);
-	const pomodoroFormWindow = el('div.pomodoro-form.window',
-		[windowPanel, windowBody, taskForm]);
+		this.windowPanel = el('div.window__panel');
+		this.windowBody = el('div.window__body');
 
-	const questList = el('ul.pomodoro-tasks__quest-list', [
-		el('li.pomodoro-tasks__list-item',
-			'Напишите название задачи чтобы её добавить'),
-		el('li.pomodoro-tasks__list-item',
-			'Чтобы задачу активировать, выберите её из списка'),
-		el('li.pomodoro-tasks__list-item', 'Запустите таймер'),
-		el('li.pomodoro-tasks__list-item', 'Работайте пока таймер не прозвонит'),
-		el('li.pomodoro-tasks__list-item', 'Сделайте короткий перерыв (5 минут)'),
-		el('li.pomodoro-tasks__list-item',
-			'Продолжайте работать, пока задача не будет выполнена.'),
-		el('li.pomodoro-tasks__list-item',
-			'Каждые 4 периода таймера делайте длинный перерыв (15-20 минут).'),
-	]);
+		this.taskForm = this.createTaskForm();
 
-	const countNumber = (number) => el('span.count-number', number);
-	const taskText = (text, isActive) =>
-		el(`button.pomodoro-tasks__task-text${isActive ?
-		'.pomodoro-tasks__task-text_active' : ''}`, text);
-	const taskButton = el('button.pomodoro-tasks__task-button');
+		setChildren(pomodoroFormWindow,
+			[this.windowPanel, this.windowBody, this.taskForm]);
 
-	const questTasks = el('ul.pomodoro-tasks__quest-tasks', [
-		el('li.pomodoro-tasks__list-task.important', [
-			countNumber('1'),
-			taskText('Сверстать сайт', true),
-			taskButton,
-		]),
-		el('li.pomodoro-tasks__list-task.so-so', [
-			countNumber('2'),
-			taskText('Оплатить налоги', false),
-			taskButton,
-		]),
-		el('li.pomodoro-tasks__list-task.default', [
-			countNumber('3'),
-			taskText('Проверить валидность', false),
-			taskButton,
-		]),
-	]);
+		this.renderQuestTasks();
+		this.renderMainPanel();
+	}
 
-	const deadlineTimer = el('p.pomodoro-tasks__deadline-timer', '1 час 30 мин');
+	renderQuestTasks() {
+		setChildren(this.questTasks, this.createTasks());
+	}
 
-	const pomodoroTasks = el('div.pomodoro-tasks', [
-		el('p.pomodoro-tasks__header-title', 'Инструкция:'),
-		questList,
-		questTasks,
-		deadlineTimer,
-	]);
+	renderMainPanel() {
+		this.hasActiveTask = !!this.tomato.activeTask;
+		setChildren(this.windowBody, this.createWindowBodyElement());
+		setChildren(this.windowPanel, this.createWindowPanelElements());
+	}
 
-	const mainSection = el('section.main', [
-		el('div.container.main__container', [
-			pomodoroFormWindow,
-			pomodoroTasks,
-		]),
-	]);
-	return {
-		windowPanelTitle,
-		windowPanelTaskText,
-		windowTimerText,
-		buttonPrimary,
-		buttonSecondary,
-		inputTask,
-		buttonImportance,
-		buttonAddTask,
-		taskForm,
-		mainSection,
-	};
-};
-const app = el('main');
-setChildren(app, renderTomato());
-document.body.appendChild(app);
+	createTaskForm() {
+		const taskForm = el('form.task-form', {action: 'submit'});
+		const taskName = el('input.task-name.input-primary',
+			{type: 'text',
+				name: 'task-name',
+				id: 'task-name',
+				placeholder: 'название задачи',
+			});
+		const buttonImportance = el('button.button.button-importance.default', {
+			type: 'button', ariaLabel: 'Указать важность',
+		});
+		const buttonAdd = el(
+			'button.button.button-primary.task-form__add-button',
+			{type: 'submit'},
+			'Добавить',
+		);
+		setChildren(taskForm, [taskName, buttonImportance, buttonAdd]);
+
+		return taskForm;
+	}
+
+	createWindowBodyElement() {
+		const windowTimerText =
+		el('p.window__timer-text', this.tomato.time + ':00');
+		const windowButtons = el('div.window__buttons');
+		const buttonStart = el('button.button.button-primary',
+			{disabled: !this.hasActiveTask}, 'Старт');
+		const buttonStop = el('button.button.button-secondary',
+			{disabled: !this.hasActiveTask}, 'Стоп');
+
+		setChildren(windowButtons, [buttonStart, buttonStop]);
+		return [windowTimerText, windowButtons];
+	}
+
+	createWindowPanelElements() {
+		const windowPanelTitle = el('div.window__panel-title',
+			this.hasActiveTask ? this.tomato.activeTask.title : 'Нет задачи');
+		const windowPanelTaskText = el('div.window__panel-task-text',
+			this.hasActiveTask ? 'Томат №' + this.tomato.activeTask.counter : '');
+
+		return [windowPanelTitle, windowPanelTaskText];
+	}
+
+	createQuestList() {
+		const questListItems = [
+			'Напишите название задачи чтобы её добавить',
+			'Чтобы задачу активировать, выберите её из списка',
+			'Запустите таймер',
+			'Работайте пока таймер не прозвонит',
+			'Сделайте короткий перерыв (5 минут)',
+			'Продолжайте работать, пока задача не будет выполнена.',
+			'Каждые 4 периода таймера делайте длинный перерыв (15-20 минут).',
+		];
+		const questList = el('ul.pomodoro-tasks__quest-list',
+			questListItems.map(item => el('li.pomodoro-tasks__list-item', item)));
+
+		return questList;
+	}
+
+	createTasks() {
+		const listTasks = [];
+
+		this.tomato.tasks.forEach(task => {
+			const taskClass = task.importance === 'major' ?
+				'important' : task.importance === 'standard' ?
+					'so-so' : 'default';
+
+			const listTask = el(`li.pomodoro-tasks__list-task.${taskClass}`);
+			listTask.dataset.id = task.id;
+			const countNumber = el('span.count-number', task.counter);
+			const buttonTaskText = el(
+				'button.pomodoro-tasks__task-text.pomodoro-tasks__task-text_active',
+				task.title,
+			);
+			const buttonTask = el('button.pomodoro-tasks__task-button');
+
+			setChildren(listTask, [countNumber, buttonTaskText, buttonTask]);
+			listTasks.push(listTask);
+		});
+
+		return listTasks;
+	}
+}
+
+// .pomodoro-tasks__task-text_active
